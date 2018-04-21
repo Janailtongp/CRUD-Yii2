@@ -198,7 +198,26 @@ class SiteController extends Controller {
         return $this->render("admin");
        
     }
-    
+    public function actionUpload() {
+        $model = new FormUpload;
+        $msg = null;
+        if ($model->load(Yii::$app->request->post())) {
+            //Para enviar apenas um arquivo 
+            $model->file = UploadedFile::getInstance($model,'file');
+            $file = $model->file;
+            //$file->saveAs(..)
+            $msg="post";
+            //$model->file = UploadedFile::getInstances($model, 'file');
+            if ($model->file && $model->validate()) {
+                $msg ="valodado";
+                //foreach ($model->file as $file) {
+                    $file->saveAs('artigos/' . 'JANAAS' . '.' . $file->extension);
+                    $msg = "<p><strong class='label label-info'>Arquivo enviado com sucesso!</strong></p>";
+               // }
+            }
+        }
+        return $this->render("upload", ["model" => $model, "msg" => $msg]);
+    }
     public function behaviors(){
         return [
             'access' => [
